@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Capstone1",
-    "slug": "Capstone1",
+    "name": "NEU-Pass",
+    "slug": "neu-pass",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,9 +13,20 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.neu.pass",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Camera access is used to capture IDs, faces, and QR passes.",
+        "NSPhotoLibraryUsageDescription": "Photo access lets guards and admins update profile pictures."
+      }
     },
     "android": {
+      "package": "com.neu.pass",
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_EXTERNAL_STORAGE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -25,6 +36,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "@react-native-community/datetimepicker"
+    ]
   }
 }
