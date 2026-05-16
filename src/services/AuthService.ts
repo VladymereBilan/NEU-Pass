@@ -32,6 +32,35 @@ export const AuthService = {
     };
   },
 
+  async signUp(username: string, password: string): Promise<User | null> {
+    const db = await getDb();
+    const existing = await db.getFirstAsync<{ user_id: number }>(
+      'SELECT user_id FROM users WHERE username = ?'
+    , [username]);
+
+    if (existing?.user_id) return null;
+
+    const passwordHash = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      password
+    );
+
+    const result = await db.runAsync(
+      'INSERT INTO users (username, password_hash, role, account_status) VALUES (?, ?, ?, ?)',
+      [username, passwordHash, 'Guard', 'Active']
+    );
+
+    const userId = result.lastInsertRowId ?? 0;
+
+    return {
+      userId,
+      username,
+      role: 'Guard',
+      accountStatus: 'Active',
+      profileImageUri: null,
+    };
+  },
+
   async updateProfileImage(userId: number, uri: string | null) {
     const db = await getDb();
     await db.runAsync('UPDATE users SET profile_image_uri = ? WHERE user_id = ?', [

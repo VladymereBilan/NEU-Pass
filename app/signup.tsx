@@ -4,31 +4,39 @@ import { useRouter } from 'expo-router';
 import { Button } from '../src/components/Button';
 import { Input } from '../src/components/Input';
 import { useAuth } from '../src/context/AuthContext';
+import { validateSignUp } from '../src/utils/validation';
 
-export default function LoginScreen() {
+export default function SignUpScreen() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { signUp } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    setLoading(true);
-    const user = await login(username.trim(), password);
-    setLoading(false);
-
-    if (!user) {
-      Alert.alert('Login failed', 'Invalid credentials or blocked account.');
+  const handleSignUp = async () => {
+    const missing = validateSignUp({ username, password, confirmPassword });
+    if (missing.length > 0) {
+      Alert.alert('Check fields', missing.join(', '));
       return;
     }
 
-    router.replace(user.role === 'Admin' ? '/(admin)/home' : '/(guard)/home');
+    setLoading(true);
+    const user = await signUp(username.trim(), password);
+    setLoading(false);
+
+    if (!user) {
+      Alert.alert('Sign up failed', 'Username already exists.');
+      return;
+    }
+
+    router.replace('/(guard)/home');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>NEU-Pass</Text>
-      <Text style={styles.subtitle}>Visitor Management System</Text>
+      <Text style={styles.title}>Create Guard Account</Text>
+      <Text style={styles.subtitle}>Sign up for a guard login</Text>
 
       <View style={styles.card}>
         <Input label="Username" value={username} onChangeText={setUsername} />
@@ -38,18 +46,23 @@ export default function LoginScreen() {
           onChangeText={setPassword}
           secureTextEntry
         />
+        <Input
+          label="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+        />
         <Button
-          title={loading ? 'Logging in...' : 'Login'}
-          onPress={handleLogin}
+          title={loading ? 'Creating...' : 'Sign Up'}
+          onPress={handleSignUp}
           disabled={loading}
         />
         <Button
-          title="Create Guard Account"
-          onPress={() => router.push('/signup')}
+          title="Back to Login"
+          onPress={() => router.replace('/login')}
           variant="secondary"
         />
       </View>
-
     </View>
   );
 }
@@ -62,7 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '700',
     color: '#0b3d91',
     textAlign: 'center',
@@ -78,6 +91,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#e2e8f0',
-    gap: 10,
   },
 });

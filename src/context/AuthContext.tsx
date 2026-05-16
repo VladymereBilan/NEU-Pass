@@ -6,6 +6,7 @@ interface AuthContextValue {
   user: User | null;
   role: UserRole | null;
   login: (username: string, password: string) => Promise<User | null>;
+  signUp: (username: string, password: string) => Promise<User | null>;
   logout: () => void;
   updateProfileImage: (uri: string | null) => Promise<void>;
 }
@@ -23,6 +24,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return result;
   };
 
+  const signUp = async (username: string, password: string) => {
+    const result = await AuthService.signUp(username, password);
+    setUser(result);
+    return result;
+  };
+
   const logout = () => setUser(null);
 
   const updateProfileImage = async (uri: string | null) => {
@@ -32,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const value = useMemo(
-    () => ({ user, role: user?.role ?? null, login, logout, updateProfileImage }),
+    () => ({ user, role: user?.role ?? null, login, signUp, logout, updateProfileImage }),
     [user]
   );
 

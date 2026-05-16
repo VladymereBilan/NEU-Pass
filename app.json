@@ -4,7 +4,7 @@
     "slug": "neu-pass",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/NEUPASS.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -28,7 +28,7 @@
         "READ_EXTERNAL_STORAGE"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/NEUPASS.jpg",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -41,6 +41,12 @@
       "expo-router",
       "expo-sqlite",
       "@react-native-community/datetimepicker"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a342626e-8a7c-473d-adb7-54ca85abbb96"
+      }
+    }
   }
 }
